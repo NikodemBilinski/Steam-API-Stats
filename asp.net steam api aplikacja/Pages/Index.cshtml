@@ -1,28 +1,36 @@
 ﻿@page
 @model IndexModel
-@{
-    ViewData["Title"] = "Home page";
-}
 
-<div class="text-center">
-    <h1 class="display-4">Steam stats a</h1>
+<html title="statystyki Steam">
+    <head>
+        <link rel="stylesheet" href="~/css/site.css" />
+    </head>
+    <body>
+        <header>
+            <h1>Steam Stats</h1>
+            Type in your SteamID to show stats
+            <br />
+            Works only on public profiles
 
-    <script></script>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+        </header>
 
 
-    <form method="post" >
-        <input asp-for="SteamID" placeholder="SteamID64"/>
-		<button type="submit">Pobierz Dane</button>
-    </form>
+        <main>
+        <form method="post" >
+            <input asp-for="apiKey" placeholder="apiKey"/>
+            <br>
+            <input asp-for="SteamID" placeholder="SteamID64"/>
+		    <button type="submit">Pull Data</button>
+        </form>
+        
+        @if(Model.RawJson != null)
+        {
+            <h2>Raw JSON Data:</h2>
+            <pre>@Model.RawJson</pre>
+        }
+        </main>
 
-    @if(Model.RawJson != null)
-    {
-        <h2>Raw JSON Data:</h2>
-        <pre>@Model.RawJson</pre>
-	}
-)
-    
 
-     
-</div>
+
+    </body>
+</html> 

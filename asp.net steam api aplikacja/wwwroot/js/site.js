@@ -7,5 +7,5 @@
 
 function test()
 {
-    alert("chuj");
+    alert("test");
 }
