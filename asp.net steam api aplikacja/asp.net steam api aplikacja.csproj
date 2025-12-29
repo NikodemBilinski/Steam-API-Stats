@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <RootNamespace>asp.net_steam_api_aplikacja</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Pages\Nowy folder\" />
+  </ItemGroup>
+
+</Project>
