@@ -13,23 +13,34 @@
             Works only on public profiles
 
         </header>
-
-
         <main>
         <form method="post" >
             <input asp-for="apiKey" placeholder="apiKey"/>
-            <br>
+            <br><br>
             <input asp-for="SteamID" placeholder="SteamID64"/>
 		    <button type="submit">Pull Data</button>
         </form>
-        
-        @if(Model.RawJson != null)
-        {
-            <h2>Raw JSON Data:</h2>
-            <pre>@Model.RawJson</pre>
-        }
+        <div id="Json">
+            @if(Model.RawJson != null)
+            {
+                <h2>Raw JSON Data:</h2>
+                <pre>@Model.RawJson</pre>
+            }
+        </div>
+        <div id="ProfileInfo">
+            <div id="ProfileInfoHeader">
+                @if(!string.IsNullOrEmpty(Model.UserName))
+                {
+                    <h2>@Model.UserName</h2>
+                    <img src="@Model.UserAvatar" alt="UserAvatar"/>
+                }
+            </div>
+            <div id="ProfileInfoMain">
+                Main
+            </div>
+        </div>
         </main>
-
+        
 
 
     </body>

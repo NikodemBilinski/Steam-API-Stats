@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
+using System.Text.Json;
 
 namespace asp.net_steam_api_aplikacja.Pages
 {
@@ -10,6 +11,12 @@ namespace asp.net_steam_api_aplikacja.Pages
         public string SteamID { get; set; }
 
         public string RawJson { get; set; }
+
+        public string UserName { get; set; }
+
+        public string UserAvatar { get; set; }
+
+
         [BindProperty]
         public string apiKey { get; set; }
 
@@ -25,6 +32,18 @@ namespace asp.net_steam_api_aplikacja.Pages
             using var http = new HttpClient();
 
             RawJson = await http.GetStringAsync(url);
+
+            using var jsonDoc = JsonDocument.Parse(RawJson);
+
+            var User = jsonDoc.RootElement.GetProperty("response").GetProperty("players")[0];
+
+            UserName = User.GetProperty("personaname").GetString();
+
+            UserAvatar = User.GetProperty("avatarfull").GetString();
+
+            Console.WriteLine(UserName);
+
+            Console.WriteLine(UserAvatar);
         }
     }
 }
