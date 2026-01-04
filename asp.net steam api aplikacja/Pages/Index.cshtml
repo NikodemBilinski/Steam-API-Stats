@@ -1,16 +1,19 @@
 ﻿@page
 @model IndexModel
 
-<html title="statystyki Steam">
+<html>
     <head>
         <link rel="stylesheet" href="~/css/site.css" />
     </head>
     <body>
+    <!--<script>setTimeout(function (){window.location.reload();},4000)</script>-->
         <header>
             <h1>Steam Stats</h1>
             Type in your SteamID to show stats
-            <br />
+            <br>
             Works only on public profiles
+            <br>
+            Read README for more info
 
         </header>
         <main>
@@ -21,22 +24,56 @@
 		    <button type="submit">Pull Data</button>
         </form>
         <div id="Json">
-            @if(Model.RawJson != null)
+            @* @if(Model.RawJson != null)
             {
                 <h2>Raw JSON Data:</h2>
                 <pre>@Model.RawJson</pre>
+            } *@
+            @if(Model.UserStatus != "0")
+            {
+                <style>
+                    #UserAvatar 
+                    {
+                        border: 3px solid rgba(102,200,241,1);
+                    }
+                    #Username
+                    {
+                        color: rgba(102,200,241,1);
+                    }
+                </style>
+            }
+            else
+            {
+                <style>
+                    #UserAvatar 
+                    {
+                        border: 3px solid rgba(141,141,142,1);
+                    }
+
+                    #Username 
+                    {
+                        color: rgba(141,141,142,1);
+                    }
+                </style>
             }
         </div>
+
+
+
         <div id="ProfileInfo">
             <div id="ProfileInfoHeader">
                 @if(!string.IsNullOrEmpty(Model.UserName))
                 {
-                    <h2>@Model.UserName</h2>
-                    <img src="@Model.UserAvatar" alt="UserAvatar"/>
+                    <img src="@Model.UserAvatar" alt="UserAvatar" id="UserAvatar" />
+                    <h2 id="Username">Username: @Model.UserName</h2>
+                }
+                else
+                {
+                    <p style="text-align:center; width:100%; padding-top:15px;">Data will be pulled here</p>
                 }
             </div>
             <div id="ProfileInfoMain">
-                Main
+                
             </div>
         </div>
         </main>

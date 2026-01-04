@@ -16,6 +16,8 @@ namespace asp.net_steam_api_aplikacja.Pages
 
         public string UserAvatar { get; set; }
 
+        public string UserStatus { get; set; }
+
 
         [BindProperty]
         public string apiKey { get; set; }
@@ -41,9 +43,12 @@ namespace asp.net_steam_api_aplikacja.Pages
 
             UserAvatar = User.GetProperty("avatarfull").GetString();
 
-            Console.WriteLine(UserName);
+            UserStatus = User.GetProperty("personastate").ToString();
 
+
+            Console.WriteLine(UserName);
             Console.WriteLine(UserAvatar);
+            Console.WriteLine(UserStatus);
         }
     }
 }

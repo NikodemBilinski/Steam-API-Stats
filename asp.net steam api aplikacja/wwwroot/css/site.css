@@ -1,4 +1,28 @@
-body
+body {
+    font-family: Arial;
+    background-color: rgb(51,51,51);
+    color:wheat;
+}
+#ProfileInfo {
+    border: 2px solid black;
+    border-radius: 15px;
+    width: 100%;
+    height: 100%;
+    margin: 15px;
+}
+#ProfileInfoHeader
 {
-font-family: 'Comic Sans MS';
+    display:flex;
+    align-items:center;
+    gap:20px;
+    
+}
+#UserAvatar
+{
+    width:10%;
+    border-radius:15px;
+}
+#Username
+{
+    margin:0;
 }
