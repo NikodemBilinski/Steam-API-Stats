@@ -24,11 +24,16 @@
 		    <button type="submit">Pull Data</button>
         </form>
         <div id="Json">
-            @* @if(Model.RawJson != null)
+            @if(Model.RawJsonSummaries != null)
             {
                 <h2>Raw JSON Data:</h2>
-                <pre>@Model.RawJson</pre>
-            } *@
+                <pre>@Model.RawJsonSummaries</pre>
+            }
+            @if (Model.RawJsonSummaries != null)
+            {
+                <h2>Raw JSON Data Friends:</h2>
+                <pre>@Model.RawJsonFriendList</pre>
+            }
             @if(Model.UserStatus != "0")
             {
                 <style>
@@ -58,7 +63,7 @@
             }
         </div>
 
-
+        <!--Moze po prostu konkretne segmenty na konkretne requesty i tyle ladniej bedzie, np w postaci blokow-->
 
         <div id="ProfileInfo">
             <div id="ProfileInfoHeader">
@@ -73,7 +78,10 @@
                 }
             </div>
             <div id="ProfileInfoMain">
-                
+                @if(Model.FriendCount > 0)
+                {
+                    <div>This User has @Model.FriendCount friends on steam</div>
+                }
             </div>
         </div>
         </main>
