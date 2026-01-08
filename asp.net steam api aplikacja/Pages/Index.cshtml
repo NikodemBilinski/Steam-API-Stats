@@ -34,33 +34,6 @@
                 <h2>Raw JSON Data Friends:</h2>
                 <pre>@Model.RawJsonFriendList</pre>
             }
-            @if(Model.UserStatus != "0")
-            {
-                <style>
-                    #UserAvatar 
-                    {
-                        border: 3px solid rgba(102,200,241,1);
-                    }
-                    #Username
-                    {
-                        color: rgba(102,200,241,1);
-                    }
-                </style>
-            }
-            else
-            {
-                <style>
-                    #UserAvatar 
-                    {
-                        border: 3px solid rgba(141,141,142,1);
-                    }
-
-                    #Username 
-                    {
-                        color: rgba(141,141,142,1);
-                    }
-                </style>
-            }
         </div>
 
         <!--Moze po prostu konkretne segmenty na konkretne requesty i tyle ladniej bedzie, np w postaci blokow-->
@@ -70,17 +43,52 @@
                 @if(!string.IsNullOrEmpty(Model.UserName))
                 {
                     <img src="@Model.UserAvatar" alt="UserAvatar" id="UserAvatar" />
-                    <h2 id="Username">Username: @Model.UserName</h2>
+                    <h2 id="Username">@Model.UserName</h2>
+                    @if (Model.UserStatus != "0")
+                    {
+                        <h3 id="Username">Online</h3>
+                        <style>
+                            #UserAvatar {
+                                border: 3px solid rgba(102,200,241,1);
+                            }
+
+                            #Username {
+                                color: rgba(102,200,241,1);
+                            }
+                        </style>
+                    }
+                    else
+                    {
+                        <h3 id="Username">Offline</h3>
+                        <style>
+                            #UserAvatar {
+                                border: 3px solid rgba(141,141,142,1);
+                            }
+
+                            #Username {
+                                color: rgba(141,141,142,1);
+                            }
+                        </style>
+                    }
                 }
                 else
                 {
                     <p style="text-align:center; width:100%; padding-top:15px;">Data will be pulled here</p>
                 }
             </div>
-            <div id="ProfileInfoMain">
+            <div id="ProfileInfoFriends">
                 @if(Model.FriendCount > 0)
                 {
-                    <div>This User has @Model.FriendCount friends on steam</div>
+                    <p>This User has @Model.FriendCount friends on steam</p>
+                }
+            </div>
+            <div id="ProfileInfoGames">
+                    
+                @for(int i = 0; i<Model.LastGamesCount;i++)
+                {
+                    <div id="LastPLayedGame">
+                        @Model.RecentGamesArray[i].GetProperty("name").ToString() <br>
+                    </div>    
                 }
             </div>
         </div>
