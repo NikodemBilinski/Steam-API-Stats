@@ -77,19 +77,38 @@
                 }
             </div>
             <div id="ProfileInfoFriends">
-                @if(Model.FriendCount > 0)
+                @if(Model.FriendCount > 0 && Model.Friendlist_Visible)
                 {
                     <p>This User has @Model.FriendCount friends on steam</p>
                 }
-            </div>
-            <div id="ProfileInfoGames">
-                    
-                @for(int i = 0; i<Model.LastGamesCount;i++)
+                else
                 {
-                    <div id="LastPLayedGame">
-                        @Model.RecentGamesArray[i].GetProperty("name").ToString() <br>
-                    </div>    
+                    <p>Friends list is private or user has no friends</p>
                 }
+            </div>
+            <div id="ProfileInfoRecentlyPlayedGames">
+                 
+                @if(Model.RecentlyPlayed_Visible)
+                {
+                    for (int i = 0; i < Model.LastGamesCount; i++)
+                    {
+                        var game = Model.RecentGamesArray[i];
+                        var appid = game.GetProperty("appid").ToString();
+                        var name = game.GetProperty("name").ToString();
+                        var img_icon_url = game.GetProperty("img_icon_url").ToString();
+
+                        <div id="LastPLayedGame">
+                            <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
+                                 style="border-radius:5px; width:40px; height:40px;" />
+                            @name (ID: @appid)
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>User didn't played any games recently</p>
+                }
+
             </div>
         </div>
         </main>

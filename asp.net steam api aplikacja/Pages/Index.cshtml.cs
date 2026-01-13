@@ -22,6 +22,7 @@ namespace asp.net_steam_api_aplikacja.Pages
 
         public int FriendCount;
         public int LastGamesCount;
+        public string steamgameid;
         public bool Profile_Visible;
         public bool Friendlist_Visible;
         public bool RecentlyPlayed_Visible;
@@ -38,31 +39,39 @@ namespace asp.net_steam_api_aplikacja.Pages
 
             using var http = new HttpClient();
 
-            
-            RawJsonSummaries = await http.GetStringAsync(url1);
-
-
-            using var jsonDoc = JsonDocument.Parse(RawJsonSummaries);
-
-            var response = jsonDoc.RootElement.GetProperty("response");
-
-            if (response.TryGetProperty("players", out JsonElement User) && User.GetArrayLength() > 0)
+            try
             {
-                User = jsonDoc.RootElement.GetProperty("response").GetProperty("players")[0];
+                RawJsonSummaries = await http.GetStringAsync(url1);
 
-                UserName = User.GetProperty("personaname").GetString();
 
-                UserAvatar = User.GetProperty("avatarfull").GetString();
+                using var jsonDoc = JsonDocument.Parse(RawJsonSummaries);
 
-                UserStatus = User.GetProperty("personastate").ToString();
+                var response = jsonDoc.RootElement.GetProperty("response");
 
+                if (response.TryGetProperty("players", out JsonElement User) && User.GetArrayLength() > 0)
+                {
+                    User = jsonDoc.RootElement.GetProperty("response").GetProperty("players")[0];
+
+                    UserName = User.GetProperty("personaname").GetString();
+
+                    UserAvatar = User.GetProperty("avatarfull").GetString();
+
+                    UserStatus = User.GetProperty("personastate").ToString();
+
+                }
+                else
+                {
+                    Profile_Visible = false;
+                    Console.WriteLine("Profil prywatny");
+                }
             }
-            else
+            catch
             {
-                Profile_Visible = false;
-                Console.WriteLine("Profil prywatny");
+                Console.WriteLine("Error_PlayerSummaries");
             }
-               
+
+
+
             // url 2 - Friends List
 
             var url2 = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + apiKey + "&steamid=" + SteamID+"&relationship=friend";
@@ -88,7 +97,7 @@ namespace asp.net_steam_api_aplikacja.Pages
             }
             catch
             {
-                Console.WriteLine("Error");
+                Console.WriteLine("Error_GetFriendList");
             }
             
 
@@ -96,29 +105,36 @@ namespace asp.net_steam_api_aplikacja.Pages
 
             var url3 = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&format=json" + "&count=9";
 
-
-            RawJsonLastPlayed = await http.GetStringAsync(url3);
-
-            var JsonDoc3 = JsonDocument.Parse(RawJsonLastPlayed);
-
-            //var LastPlayed = JsonDoc3.RootElement.GetProperty("response").GetProperty("games");
-
-            if(JsonDoc3.RootElement.TryGetProperty("response",out JsonElement test) && test.TryGetProperty("games",out JsonElement RecentGames))
+            try
             {
-                RecentGamesArray = RecentGames;
-                LastGamesCount = RecentGames.GetArrayLength();
-                RecentlyPlayed_Visible = true;
+                RawJsonLastPlayed = await http.GetStringAsync(url3);
+
+                var JsonDoc3 = JsonDocument.Parse(RawJsonLastPlayed);
+
+                //var LastPlayed = JsonDoc3.RootElement.GetProperty("response").GetProperty("games");
+
+                if (JsonDoc3.RootElement.TryGetProperty("response", out JsonElement test) && test.TryGetProperty("games", out JsonElement RecentGames))
+                {
+                    RecentGamesArray = RecentGames;
+                    LastGamesCount = RecentGames.GetArrayLength();
+                    RecentlyPlayed_Visible = true;
+                }
+                else
+                {
+                    RecentlyPlayed_Visible = false;
+                    Console.WriteLine("recent games private");
+                }
             }
-            else
+            catch
             {
-                RecentlyPlayed_Visible = false;
-                Console.WriteLine("recent games private");
+                Console.WriteLine("Error_GetRecentlyPlayedGames");
             }
 
 
-                // url 4 - Games
 
-                //DEBUGGING 
+            // url 4 - Games
+
+            //DEBUGGING 
 
             //Console.WriteLine(RawJsonFriendList);
             //Console.WriteLine(RawJsonLastPlayed);
