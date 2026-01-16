@@ -72,7 +72,7 @@ namespace asp.net_steam_api_aplikacja.Pages
 
 
 
-            // url 2 - Friends List
+            // url 2 - Friends List     DODAC TOP 5 NAJSTARSZYCH ZNAJOMYCH NA STEAM POD ILOSCIA ZNAJOMYCH NA NEXT
 
             var url2 = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + apiKey + "&steamid=" + SteamID+"&relationship=friend";
 
@@ -132,7 +132,8 @@ namespace asp.net_steam_api_aplikacja.Pages
 
 
 
-            // url 4 - Games
+            // url 4 - Games   DODAC TOP NAJDLUZEJ GRANYCH GIER, ZERKNAC ROWNIEZ DO GetOwnedGames
+            // I SPRAWDZIC CZY DA SIE COS WYKOMBINOWAC
 
             //DEBUGGING 
 

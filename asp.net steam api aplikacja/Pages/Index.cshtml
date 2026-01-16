@@ -79,6 +79,7 @@
             <div id="ProfileInfoFriends">
                 @if(Model.FriendCount > 0 && Model.Friendlist_Visible)
                 {
+                    <h3 style="text-align:center;">User Friends on Steam</h3> <br>
                     <p>This User has @Model.FriendCount friends on steam</p>
                 }
                 else
@@ -90,17 +91,20 @@
                  
                 @if(Model.RecentlyPlayed_Visible)
                 {
+                    <h3 style="text-align:center;">Recently Played Games</h3> <br>
                     for (int i = 0; i < Model.LastGamesCount; i++)
                     {
                         var game = Model.RecentGamesArray[i];
                         var appid = game.GetProperty("appid").ToString();
                         var name = game.GetProperty("name").ToString();
                         var img_icon_url = game.GetProperty("img_icon_url").ToString();
+                        var minutesplayed = game.GetProperty("playtime_forever").GetInt32();
+                        var hoursplayed = (minutesplayed / 60);
 
-                        <div id="LastPLayedGame">
+                        <div id="LastPlayedGame">
                             <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
                                  style="border-radius:5px; width:40px; height:40px;" />
-                            @name (ID: @appid)
+                            @(name) <br> Hours Played: @(hoursplayed), (ID: @(appid)) <br><br>
                         </div>
                     }
                 }
