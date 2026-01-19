@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System.Net.Http;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
+using static System.Net.WebRequestMethods;
 
 namespace asp.net_steam_api_aplikacja.Pages
 {
@@ -18,6 +20,8 @@ namespace asp.net_steam_api_aplikacja.Pages
 
         public JsonElement FriendsListArray { get; set; }
 
+        public List<JsonElement> FiveOldestFriends { get; set; }
+        public List<JsonElement> FiveOldestFriendsInfo { get; set; }
         public string UserName { get; set; }
         public string UserAvatar { get; set; }
         public string UserStatus { get; set; }
@@ -38,10 +42,31 @@ namespace asp.net_steam_api_aplikacja.Pages
 
         public async Task OnPostAsync()
         {
-            // url 1 - Player Summaries
-            var url1 = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + apiKey + "&steamids=" + SteamID;
 
             using var http = new HttpClient();
+
+            await GetPlayerSummaries(http);
+            await GetFriendList(http);
+            await GetLastPlayedGames(http);
+
+            // url 4 - Games   DODAC TOP NAJDLUZEJ GRANYCH GIER, ZERKNAC ROWNIEZ DO GetOwnedGames
+            // I SPRAWDZIC CZY DA SIE COS WYKOMBINOWAC
+
+            //DEBUGGING 
+
+            //Console.WriteLine(RawJsonFriendList);
+            //Console.WriteLine(RawJsonLastPlayed);
+            //Console.WriteLine("last games: "+ LastGamesCount);
+            //Console.WriteLine(FriendCount);
+            //Console.WriteLine(UserName);
+            //Console.WriteLine(UserAvatar);
+            //Console.WriteLine(UserStatus);
+        }
+
+        public async Task GetPlayerSummaries(HttpClient http)
+        {
+            // url 1 - Player Summaries
+            var url1 = "http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key=" + apiKey + "&steamids=" + SteamID;
 
             try
             {
@@ -73,14 +98,15 @@ namespace asp.net_steam_api_aplikacja.Pages
             {
                 Console.WriteLine("Error_PlayerSummaries");
             }
+        }
 
-
-
+        public async Task GetFriendList(HttpClient http)
+        {
             // url 2 - Friends List     DODAC TOP 5 NAJSTARSZYCH ZNAJOMYCH NA STEAM POD ILOSCIA ZNAJOMYCH NA NEXT
 
-            var url2 = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + apiKey + "&steamid=" + SteamID+"&relationship=friend";
+            var url2 = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&relationship=friend";
 
-            
+
             try
             {
                 RawJsonFriendList = await http.GetStringAsync(url2);
@@ -89,20 +115,42 @@ namespace asp.net_steam_api_aplikacja.Pages
 
                 if (JsonDoc2.RootElement.TryGetProperty("friendslist", out JsonElement FriendList) && FriendList.GetProperty("friends").GetArrayLength() > 0)
                 {
+                    // code for friend list
+
                     Friendlist_Visible = true;
                     FriendCount = FriendList.GetProperty("friends").GetArrayLength();
                     FriendsListArray = FriendList.GetProperty("friends");
 
-                    for(int i = 0; i< FriendCount;i++)
-                    {
-                        int currentFriendSince = FriendsListArray[i].GetProperty("friend_since").GetInt32();
+                    var TempList = new List<JsonElement>();
 
-                        if (currentFriendSince < OldestFriendTime && currentFriendSince > 0)
-                        {
-                            OldestFriendTime = FriendsListArray[i].GetProperty("friend_since").GetInt32();
-                            OldestFriendID = FriendsListArray[i].GetProperty("steamid").ToString();
-                        }
+
+
+                    for (int i = 0; i < FriendCount; i++)
+                    {
+                        TempList.Add(FriendsListArray[i]);
                     }
+
+                    TempList.Sort((a, b) => a.GetProperty("friend_since").GetInt32().CompareTo(b.GetProperty("friend_since").GetInt32()));
+
+                    FiveOldestFriends = TempList.GetRange(0, (Math.Min(5, TempList.Count())));
+
+                    var ids = FiveOldestFriends.Select(x => x.GetProperty("steamid").GetString());
+                    string joined_ids = string.Join(",", ids);
+
+                    Console.WriteLine(joined_ids);
+
+                    var url_OldestFriends = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={joined_ids}";
+
+                    var OldestFriends_Response = await http.GetStringAsync(url_OldestFriends);
+
+
+                    var OldestFriends_Parse = JsonDocument.Parse(OldestFriends_Response);
+
+                    FiveOldestFriendsInfo = OldestFriends_Parse.RootElement.GetProperty("response").GetProperty("players").EnumerateArray()
+                        .Select(p => p.Clone()).ToList();
+
+                    Console.WriteLine(FiveOldestFriendsInfo[1]);
+
                 }
                 else
                 {
@@ -114,8 +162,10 @@ namespace asp.net_steam_api_aplikacja.Pages
             {
                 Console.WriteLine("Error_GetFriendList");
             }
-            
+        }
 
+        public async Task GetLastPlayedGames(HttpClient http)
+        {
             // url 3 - Last Played
 
             var url3 = "http://api.steampowered.com/IPlayerService/GetRecentlyPlayedGames/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&format=json" + "&count=9";
@@ -131,7 +181,7 @@ namespace asp.net_steam_api_aplikacja.Pages
                 if (JsonDoc3.RootElement.TryGetProperty("response", out JsonElement test) && test.TryGetProperty("games", out JsonElement RecentGames))
                 {
                     RecentGamesArray = RecentGames;
-                    LastGamesCount = RecentGames.GetArrayLength();
+                    LastGamesCount = 5;
                     RecentlyPlayed_Visible = true;
                 }
                 else
@@ -144,21 +194,6 @@ namespace asp.net_steam_api_aplikacja.Pages
             {
                 Console.WriteLine("Error_GetRecentlyPlayedGames");
             }
-
-
-
-            // url 4 - Games   DODAC TOP NAJDLUZEJ GRANYCH GIER, ZERKNAC ROWNIEZ DO GetOwnedGames
-            // I SPRAWDZIC CZY DA SIE COS WYKOMBINOWAC
-
-            //DEBUGGING 
-
-            Console.WriteLine(RawJsonFriendList);
-            //Console.WriteLine(RawJsonLastPlayed);
-            //Console.WriteLine("last games: "+ LastGamesCount);
-            //Console.WriteLine(FriendCount);
-            //Console.WriteLine(UserName);
-            //Console.WriteLine(UserAvatar);
-            //Console.WriteLine(UserStatus);
         }
     }
 }
