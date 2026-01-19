@@ -16,10 +16,14 @@ namespace asp.net_steam_api_aplikacja.Pages
 
         public JsonElement RecentGamesArray { get; set; }
 
+        public JsonElement FriendsListArray { get; set; }
+
         public string UserName { get; set; }
         public string UserAvatar { get; set; }
         public string UserStatus { get; set; }
 
+        public int OldestFriendTime = int.MaxValue;
+        public string OldestFriendID;
         public int FriendCount;
         public int LastGamesCount;
         public string steamgameid;
@@ -81,13 +85,24 @@ namespace asp.net_steam_api_aplikacja.Pages
             {
                 RawJsonFriendList = await http.GetStringAsync(url2);
 
-                using var JsonDoc2 = JsonDocument.Parse(RawJsonFriendList);
+                var JsonDoc2 = JsonDocument.Parse(RawJsonFriendList);
 
                 if (JsonDoc2.RootElement.TryGetProperty("friendslist", out JsonElement FriendList) && FriendList.GetProperty("friends").GetArrayLength() > 0)
                 {
-                    FriendCount = FriendList.GetProperty("friends").GetArrayLength();
-                    Console.WriteLine("list jest");
                     Friendlist_Visible = true;
+                    FriendCount = FriendList.GetProperty("friends").GetArrayLength();
+                    FriendsListArray = FriendList.GetProperty("friends");
+
+                    for(int i = 0; i< FriendCount;i++)
+                    {
+                        int currentFriendSince = FriendsListArray[i].GetProperty("friend_since").GetInt32();
+
+                        if (currentFriendSince < OldestFriendTime && currentFriendSince > 0)
+                        {
+                            OldestFriendTime = FriendsListArray[i].GetProperty("friend_since").GetInt32();
+                            OldestFriendID = FriendsListArray[i].GetProperty("steamid").ToString();
+                        }
+                    }
                 }
                 else
                 {
@@ -137,7 +152,7 @@ namespace asp.net_steam_api_aplikacja.Pages
 
             //DEBUGGING 
 
-            //Console.WriteLine(RawJsonFriendList);
+            Console.WriteLine(RawJsonFriendList);
             //Console.WriteLine(RawJsonLastPlayed);
             //Console.WriteLine("last games: "+ LastGamesCount);
             //Console.WriteLine(FriendCount);
