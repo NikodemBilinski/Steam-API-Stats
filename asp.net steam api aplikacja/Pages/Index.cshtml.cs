@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using System;
 using System.Net.Http;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
@@ -22,6 +23,8 @@ namespace asp.net_steam_api_aplikacja.Pages
 
         public List<JsonElement> FiveOldestFriends { get; set; }
         public List<JsonElement> FiveOldestFriendsInfo { get; set; }
+        public List<JsonElement> FiveNewestFriends { get; set; }
+        public List<JsonElement> FiveNewestFriendsInfo { get; set; }
         public string UserName { get; set; }
         public string UserAvatar { get; set; }
         public string UserStatus { get; set; }
@@ -107,8 +110,8 @@ namespace asp.net_steam_api_aplikacja.Pages
             var url2 = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&relationship=friend";
 
 
-            try
-            {
+           /* try
+            {*/
                 RawJsonFriendList = await http.GetStringAsync(url2);
 
                 var JsonDoc2 = JsonDocument.Parse(RawJsonFriendList);
@@ -130,38 +133,62 @@ namespace asp.net_steam_api_aplikacja.Pages
                         TempList.Add(FriendsListArray[i]);
                     }
 
+
                     TempList.Sort((a, b) => a.GetProperty("friend_since").GetInt32().CompareTo(b.GetProperty("friend_since").GetInt32()));
 
+                    // oldest friends 
                     FiveOldestFriends = TempList.GetRange(0, (Math.Min(5, TempList.Count())));
+
 
                     var ids = FiveOldestFriends.Select(x => x.GetProperty("steamid").GetString());
                     string joined_ids = string.Join(",", ids);
 
-                    Console.WriteLine(joined_ids);
+                    //Console.WriteLine(joined_ids);
 
-                    var url_OldestFriends = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={joined_ids}";
+                    var url_Friends = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={joined_ids}";
 
-                    var OldestFriends_Response = await http.GetStringAsync(url_OldestFriends);
+                    var Friends_Response = await http.GetStringAsync(url_Friends);
 
-
-                    var OldestFriends_Parse = JsonDocument.Parse(OldestFriends_Response);
+                    using var OldestFriends_Parse = JsonDocument.Parse(Friends_Response);
 
                     FiveOldestFriendsInfo = OldestFriends_Parse.RootElement.GetProperty("response").GetProperty("players").EnumerateArray()
                         .Select(p => p.Clone()).ToList();
 
-                    Console.WriteLine(FiveOldestFriendsInfo[1]);
+                    //Console.WriteLine(FiveOldestFriendsInfo[1]);
 
+                    // newest friends
+                    FiveNewestFriends = TempList.OrderByDescending(x => x.GetProperty("friend_since").GetInt32()).Take(5).ToList();
+
+                    ids = FiveNewestFriends.Select(x => x.GetProperty("steamid").GetString());
+
+                    joined_ids = string.Join(",", ids);
+
+                    url_Friends = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={joined_ids}";
+
+                    Console.WriteLine(url_Friends);
+
+                    Friends_Response = await http.GetStringAsync(url_Friends);
+
+                    using var NewestFriends_Parse = JsonDocument.Parse(Friends_Response);
+
+
+
+                    FiveNewestFriendsInfo = NewestFriends_Parse.RootElement.GetProperty("response").GetProperty("players").EnumerateArray()
+                        .Select(x => x.Clone()).ToList();
+
+
+                    Console.WriteLine(FiveNewestFriendsInfo[4]);
                 }
                 else
                 {
                     Friendlist_Visible = false;
                     Console.WriteLine("Friends Private");
                 }
-            }
+            /*}
             catch
             {
                 Console.WriteLine("Error_GetFriendList");
-            }
+            }*/
         }
 
         public async Task GetLastPlayedGames(HttpClient http)
