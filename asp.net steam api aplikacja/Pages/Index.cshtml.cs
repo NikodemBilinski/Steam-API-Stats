@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Net.Http;
+using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using static System.Net.WebRequestMethods;
@@ -165,7 +166,7 @@ namespace asp.net_steam_api_aplikacja.Pages
 
                     url_Friends = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={joined_ids}";
 
-                    Console.WriteLine(url_Friends);
+                    //Console.WriteLine(url_Friends);
 
                     Friends_Response = await http.GetStringAsync(url_Friends);
 
@@ -177,7 +178,9 @@ namespace asp.net_steam_api_aplikacja.Pages
                         .Select(x => x.Clone()).ToList();
 
 
-                    Console.WriteLine(FiveNewestFriendsInfo[4]);
+                    //Console.WriteLine(FiveNewestFriendsInfo[4]);
+
+                    Console.WriteLine(FiveNewestFriendsInfo[1].GetProperty("avatar").ToString());
                 }
                 else
                 {

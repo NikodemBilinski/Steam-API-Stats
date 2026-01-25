@@ -82,20 +82,24 @@
                     <h3 style="text-align:center;">User Friends on Steam</h3> <br>
                     <p>This User has @Model.FriendCount friends on steam</p>
 
-
+                    <div id="OldestFriends">
                     <p>5 OLDEST FRIENDS</p>
-                    for(int i = 0; i < Model.FiveOldestFriends.Count; i++)
+                    @for(int i = 0; i < Model.FiveOldestFriends.Count; i++)
                     {
                         
-                        <p>Friend nr. @(i + 1) @(Model.FiveOldestFriendsInfo[i].GetProperty("personaname").ToString())</p>
-                    } 
+                        <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveOldestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
+                            alt="fewa" style="border-radius:15px;"> &nbsp &nbsp @(Model.FiveOldestFriendsInfo[i].GetProperty("personaname").ToString())</p>
+                    }
+                    </div>
+                    <div id="NewestFriends">
                     <p>5 NEWEST FRIENDS</p>
-                    for(int i = 0; i < Model.FiveNewestFriends.Count; i++)
+                    @for(int i = 0; i < Model.FiveNewestFriends.Count; i++)
                     {
                         
-                        <p>Friend nr. @(i + 1) @(Model.FiveNewestFriendsInfo[i].GetProperty("personaname").ToString())</p>
+                        <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveNewestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
+                            alt="fewa"> &nbsp &nbsp @(Model.FiveNewestFriendsInfo[i].GetProperty("personaname").ToString())</p>
                     }  
-                    
+                    </div>
                     
                 }
                 else
