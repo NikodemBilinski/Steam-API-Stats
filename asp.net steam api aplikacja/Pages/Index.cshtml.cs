@@ -18,6 +18,8 @@ namespace asp.net_steam_api_aplikacja.Pages
         public string RawJsonFriendList { get; set; }
         public string RawJsonLastPlayed { get; set; }
 
+        public string RawJsonGames { get; set; }
+
         public JsonElement RecentGamesArray { get; set; }
 
         public JsonElement FriendsListArray { get; set; }
@@ -52,9 +54,9 @@ namespace asp.net_steam_api_aplikacja.Pages
             await GetPlayerSummaries(http);
             await GetFriendList(http);
             await GetLastPlayedGames(http);
+            await GetOwnedGames(http);
 
-            // url 4 - Games   DODAC TOP NAJDLUZEJ GRANYCH GIER, ZERKNAC ROWNIEZ DO GetOwnedGames
-            // I SPRAWDZIC CZY DA SIE COS WYKOMBINOWAC
+
 
             //DEBUGGING 
 
@@ -111,8 +113,8 @@ namespace asp.net_steam_api_aplikacja.Pages
             var url2 = "http://api.steampowered.com/ISteamUser/GetFriendList/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&relationship=friend";
 
 
-           /* try
-            {*/
+            try
+            {
                 RawJsonFriendList = await http.GetStringAsync(url2);
 
                 var JsonDoc2 = JsonDocument.Parse(RawJsonFriendList);
@@ -142,9 +144,9 @@ namespace asp.net_steam_api_aplikacja.Pages
 
 
                     var ids = FiveOldestFriends.Select(x => x.GetProperty("steamid").GetString());
+
                     string joined_ids = string.Join(",", ids);
 
-                    //Console.WriteLine(joined_ids);
 
                     var url_Friends = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={joined_ids}";
 
@@ -155,7 +157,6 @@ namespace asp.net_steam_api_aplikacja.Pages
                     FiveOldestFriendsInfo = OldestFriends_Parse.RootElement.GetProperty("response").GetProperty("players").EnumerateArray()
                         .Select(p => p.Clone()).ToList();
 
-                    //Console.WriteLine(FiveOldestFriendsInfo[1]);
 
                     // newest friends
                     FiveNewestFriends = TempList.OrderByDescending(x => x.GetProperty("friend_since").GetInt32()).Take(5).ToList();
@@ -166,7 +167,6 @@ namespace asp.net_steam_api_aplikacja.Pages
 
                     url_Friends = $"http://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?key={apiKey}&steamids={joined_ids}";
 
-                    //Console.WriteLine(url_Friends);
 
                     Friends_Response = await http.GetStringAsync(url_Friends);
 
@@ -178,7 +178,6 @@ namespace asp.net_steam_api_aplikacja.Pages
                         .Select(x => x.Clone()).ToList();
 
 
-                    //Console.WriteLine(FiveNewestFriendsInfo[4]);
 
                     Console.WriteLine(FiveNewestFriendsInfo[1].GetProperty("avatar").ToString());
                 }
@@ -187,12 +186,14 @@ namespace asp.net_steam_api_aplikacja.Pages
                     Friendlist_Visible = false;
                     Console.WriteLine("Friends Private");
                 }
-            /*}
+            }
+
+
             catch
             {
                 Console.WriteLine("Error_GetFriendList");
-            }*/
-        }
+            }
+}
 
         public async Task GetLastPlayedGames(HttpClient http)
         {
@@ -225,5 +226,27 @@ namespace asp.net_steam_api_aplikacja.Pages
                 Console.WriteLine("Error_GetRecentlyPlayedGames");
             }
         }
+
+        public async Task GetOwnedGames(HttpClient http)
+        {
+            // url 4 - Games   DODAC TOP NAJDLUZEJ GRANYCH GIER, ZERKNAC ROWNIEZ DO GetOwnedGames
+            // I SPRAWDZIC CZY DA SIE COS WYKOMBINOWAC
+
+            var url4 = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&format=json";
+            try
+            {
+                RawJsonGames = await http.GetStringAsync(url4);
+
+                var JsonDoc4 = JsonDocument.Parse(RawJsonGames);
+
+                Console.WriteLine(JsonDoc4.RootElement.ToString());
+
+            }
+            catch
+            {
+                Console.WriteLine("Error_GetOwnedGames");
+            }
+        }
+
     }
 }
