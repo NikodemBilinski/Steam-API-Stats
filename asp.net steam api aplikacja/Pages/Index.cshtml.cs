@@ -22,6 +22,8 @@ namespace asp.net_steam_api_aplikacja.Pages
 
         public JsonElement RecentGamesArray { get; set; }
 
+        public JsonElement OwnedGamesArray { get; set; }
+
         public JsonElement FriendsListArray { get; set; }
 
         public List<JsonElement> FiveOldestFriends { get; set; }
@@ -35,7 +37,9 @@ namespace asp.net_steam_api_aplikacja.Pages
         public int OldestFriendTime = int.MaxValue;
         public string OldestFriendID;
         public int FriendCount;
+
         public int LastGamesCount;
+        public int GameCount;
         public string steamgameid;
         public bool Profile_Visible;
         public bool Friendlist_Visible;
@@ -61,7 +65,7 @@ namespace asp.net_steam_api_aplikacja.Pages
             //DEBUGGING 
 
             //Console.WriteLine(RawJsonFriendList);
-            //Console.WriteLine(RawJsonLastPlayed);
+            Console.WriteLine(RawJsonLastPlayed);
             //Console.WriteLine("last games: "+ LastGamesCount);
             //Console.WriteLine(FriendCount);
             //Console.WriteLine(UserName);
@@ -212,7 +216,8 @@ namespace asp.net_steam_api_aplikacja.Pages
                 if (JsonDoc3.RootElement.TryGetProperty("response", out JsonElement test) && test.TryGetProperty("games", out JsonElement RecentGames))
                 {
                     RecentGamesArray = RecentGames;
-                    LastGamesCount = 5;
+                    LastGamesCount = RecentGamesArray.GetArrayLength();
+
                     RecentlyPlayed_Visible = true;
                 }
                 else
@@ -224,6 +229,7 @@ namespace asp.net_steam_api_aplikacja.Pages
             catch
             {
                 Console.WriteLine("Error_GetRecentlyPlayedGames");
+                RecentlyPlayed_Visible = false;
             }
         }
 
@@ -232,12 +238,23 @@ namespace asp.net_steam_api_aplikacja.Pages
             // url 4 - Games   DODAC TOP NAJDLUZEJ GRANYCH GIER, ZERKNAC ROWNIEZ DO GetOwnedGames
             // I SPRAWDZIC CZY DA SIE COS WYKOMBINOWAC
 
-            var url4 = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&format=json";
+            var url4 = "http://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/?key=" + apiKey + "&steamid=" + SteamID + "&format=json&include_appinfo=1";
             try
             {
                 RawJsonGames = await http.GetStringAsync(url4);
 
                 var JsonDoc4 = JsonDocument.Parse(RawJsonGames);
+
+                if(JsonDoc4.RootElement.TryGetProperty("response",out JsonElement OwnedGamesResponse) && OwnedGamesResponse.TryGetProperty("games",out JsonElement OwnedGames))
+                {
+                    GameCount = OwnedGamesResponse.GetProperty("game_count").GetInt32();
+
+                    OwnedGamesArray = OwnedGames;
+
+                    Console.WriteLine("Game count: " + GameCount);
+                    Console.WriteLine(OwnedGamesArray[54]);
+
+                }
 
                 Console.WriteLine(JsonDoc4.RootElement.ToString());
 

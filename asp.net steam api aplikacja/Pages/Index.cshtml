@@ -112,27 +112,39 @@
                 @if(Model.RecentlyPlayed_Visible)
                 {
                     <h3 style="text-align:center;">Recently Played Games</h3> <br>
-                    for (int i = 0; i < Model.LastGamesCount; i++)
+                    if(Model.LastGamesCount > 0 && Model.RecentlyPlayed_Visible)
                     {
-                        var game = Model.RecentGamesArray[i];
-                        var appid = game.GetProperty("appid").ToString();
-                        var name = game.GetProperty("name").ToString();
-                        var img_icon_url = game.GetProperty("img_icon_url").ToString();
-                        var minutesplayed = game.GetProperty("playtime_forever").GetInt32();
-                        var hoursplayed = (minutesplayed / 60);
+                        for (int i = 0; i < Math.Min(5,Model.LastGamesCount); i++)
+                        {
+                            var game = Model.RecentGamesArray[i];
+                            var appid = game.GetProperty("appid").ToString();
+                            var name = game.GetProperty("name").ToString();
+                            var img_icon_url = game.GetProperty("img_icon_url").ToString();
+                            var minutesplayed = game.GetProperty("playtime_forever").GetInt32();
+                            var hoursplayed = (minutesplayed / 60);
 
-                        <div id="LastPlayedGame">
-                            <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
-                                 style="border-radius:5px; width:40px; height:40px;" />
-                            @(name) <br> Hours Played: @(hoursplayed), (ID: @(appid)) <br><br>
-                        </div>
+                            <div id="LastPlayedGame">
+                                <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
+                                     style="border-radius:5px; width:40px; height:40px;" />
+                                @(name) <br> Hours Played: @(hoursplayed), (ID: @(appid)) <br><br>
+                            </div>
+                            
+                        }
                     }
+                    else
+                    {
+                        <p>User didn't played any games recently</p>
+                    }
+                    
                 }
                 else
                 {
                     <p>User didn't played any games recently</p>
                 }
 
+            </div>
+            <div id="OwnedGames">
+                <p>This user has: @Model.GameCount Games</p>
             </div>
         </div>
         </main>
