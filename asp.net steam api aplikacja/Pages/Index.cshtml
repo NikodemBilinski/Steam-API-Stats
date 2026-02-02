@@ -76,75 +76,83 @@
                     <p style="text-align:center; width:100%; padding-top:15px;">Data will be pulled here</p>
                 }
             </div>
-            <div id="ProfileInfoFriends">
-                @if(Model.FriendCount > 0 && Model.Friendlist_Visible)
-                {
-                    <h3 style="text-align:center;">User Friends on Steam</h3> <br>
-                    <p>This User has @Model.FriendCount friends on steam</p>
 
-                    <div id="OldestFriends">
-                    <p>5 OLDEST FRIENDS</p>
-                    @for(int i = 0; i < Model.FiveOldestFriends.Count; i++)
+
+            <div class="main-container">
+                <div id="ProfileInfoFriends">
+                    @if(Model.FriendCount > 0 && Model.Friendlist_Visible)
                     {
-                        
-                        <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveOldestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
-                            alt="fewa" style="border-radius:15px;"> &nbsp &nbsp @(Model.FiveOldestFriendsInfo[i].GetProperty("personaname").ToString())</p>
-                    }
-                    </div>
-                    <div id="NewestFriends">
-                    <p>5 NEWEST FRIENDS</p>
-                    @for(int i = 0; i < Model.FiveNewestFriends.Count; i++)
-                    {
-                        
-                        <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveNewestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
-                            alt="fewa"> &nbsp &nbsp @(Model.FiveNewestFriendsInfo[i].GetProperty("personaname").ToString())</p>
-                    }  
-                    </div>
-                    
-                }
-                else
-                {
-                    <p>Friends list is private or user has no friends</p>
-                }
-            </div>
-            <div id="ProfileInfoRecentlyPlayedGames">
-                 
-                @if(Model.RecentlyPlayed_Visible)
-                {
-                    <h3 style="text-align:center;">Recently Played Games</h3> <br>
-                    if(Model.LastGamesCount > 0 && Model.RecentlyPlayed_Visible)
-                    {
-                        for (int i = 0; i < Math.Min(5,Model.LastGamesCount); i++)
+                        <h3 style="text-align:center;">User Friends on Steam</h3> <br>
+                        <p>This User has @Model.FriendCount friends on steam</p>
+
+                        <div id="OldestFriends">
+                        <p>5 OLDEST FRIENDS</p>
+                        @for(int i = 0; i < Model.FiveOldestFriends.Count; i++)
                         {
-                            var game = Model.RecentGamesArray[i];
-                            var appid = game.GetProperty("appid").ToString();
-                            var name = game.GetProperty("name").ToString();
-                            var img_icon_url = game.GetProperty("img_icon_url").ToString();
-                            var minutesplayed = game.GetProperty("playtime_forever").GetInt32();
-                            var hoursplayed = (minutesplayed / 60);
-
-                            <div id="LastPlayedGame">
-                                <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
-                                     style="border-radius:5px; width:40px; height:40px;" />
-                                @(name) <br> Hours Played: @(hoursplayed), (ID: @(appid)) <br><br>
-                            </div>
-                            
+                        
+                            <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveOldestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
+                                alt="fewa" style="border-radius:15px;"> &nbsp &nbsp @(Model.FiveOldestFriendsInfo[i].GetProperty("personaname").ToString())</p>
                         }
+                        </div>
+                        <div id="NewestFriends">
+                        <p>5 NEWEST FRIENDS</p>
+                        @for(int i = 0; i < Model.FiveNewestFriends.Count; i++)
+                        {
+                        
+                            <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveNewestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
+                                alt="fewa"> &nbsp &nbsp @(Model.FiveNewestFriendsInfo[i].GetProperty("personaname").ToString())</p>
+                        }  
+                        </div>
+                    
+                    }
+                    else
+                    {
+                        <p>Friends list is private or user has no friends</p>
+                    }
+                </div>
+            
+
+                <div class="right-container">
+                <div id="ProfileInfoRecentlyPlayedGames">
+                 
+                    @if(Model.RecentlyPlayed_Visible)
+                    {
+                        <h3 style="text-align:center;">Recently Played Games</h3> <br>
+                        if(Model.LastGamesCount > 0 && Model.RecentlyPlayed_Visible)
+                        {
+                            for (int i = 0; i < Math.Min(5,Model.LastGamesCount); i++)
+                            {
+                                var game = Model.RecentGamesArray[i];
+                                var appid = game.GetProperty("appid").ToString();
+                                var name = game.GetProperty("name").ToString();
+                                var img_icon_url = game.GetProperty("img_icon_url").ToString();
+                                var minutesplayed = game.GetProperty("playtime_forever").GetInt32();
+                                var hoursplayed = (minutesplayed / 60);
+
+                                <div id="LastPlayedGame">
+                                    <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
+                                         style="border-radius:5px; width:40px; height:40px;" />
+                                    @(name) <br> Hours Played: @(hoursplayed), (ID: @(appid)) <br><br>
+                                </div>
+                            
+                            }
+                        }
+                        else
+                        {
+                            <p>User didn't played any games recently</p>
+                        }
+                    
                     }
                     else
                     {
                         <p>User didn't played any games recently</p>
                     }
-                    
-                }
-                else
-                {
-                    <p>User didn't played any games recently</p>
-                }
 
-            </div>
-            <div id="OwnedGames">
-                <p>This user has: @Model.GameCount Games</p>
+                </div>
+                <div id="OwnedGames">
+                    <p>This user has: @Model.GameCount Games</p>
+                </div>
+                </div>
             </div>
         </div>
         </main>

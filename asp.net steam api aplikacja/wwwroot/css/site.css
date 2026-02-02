@@ -4,7 +4,6 @@ body {
     color:wheat;
 }
 #ProfileInfo {
-    display: flex;
     gap: 20px;
     flex-wrap: wrap;
     justify-content: center;
@@ -26,21 +25,21 @@ body {
     margin:0;
 }
 #ProfileInfoFriends {
-    
+    flex:1.25;
     border: solid 5px black;
     border-radius: 15px;
     color: rgb(231,236,244);
     font-size: 20px;
     width: calc(50% - 20px);
-    height: 120vh;
+    min-height: 120vh;
 }
-#ProfileInfoRecentlyPlayedGames {
+#ProfileInfoRecentlyPlayedGames, #OwnedGames {
     border: solid 5px black;
     border-radius: 15px;
     color: rgb(231,236,244);
     font-size: 20px;
-    width: calc(50% - 20px);
-    height: 60vh;
+    width: 100%;
+    min-height: 60vh;
 }
 #LastPlayedGame{
     padding-left:25px;
@@ -52,4 +51,16 @@ body {
 #NewestFriends {
     padding: 25px;
     font-size: 25px;
+}
+.main-container{
+    display:flex;
+    gap:20px;
+    width:100%;
+    align-items:flex-start;
+}
+.right-container{
+    display:flex;
+    flex:1;
+    flex-direction:column;
+    gap:20px;
 }
