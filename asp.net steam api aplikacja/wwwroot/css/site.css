@@ -25,13 +25,14 @@ body {
     margin:0;
 }
 #ProfileInfoFriends {
-    flex:1.25;
+    flex: 1.25;
     border: solid 5px black;
     border-radius: 15px;
     color: rgb(231,236,244);
     font-size: 20px;
     width: calc(50% - 20px);
     min-height: 120vh;
+    padding: 10px;
 }
 #ProfileInfoRecentlyPlayedGames, #OwnedGames {
     border: solid 5px black;
@@ -40,9 +41,10 @@ body {
     font-size: 20px;
     width: 100%;
     min-height: 60vh;
+    padding: 10px;
 }
 #LastPlayedGame{
-    padding-left:25px;
+    
 }
 #OldestFriends {
     padding: 25px;

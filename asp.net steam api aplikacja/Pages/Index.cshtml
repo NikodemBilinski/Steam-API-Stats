@@ -6,7 +6,6 @@
         <link rel="stylesheet" href="~/css/site.css" />
     </head>
     <body>
-    <!--<script>setTimeout(function (){window.location.reload();},4000)</script>-->
         <header>
             <h1>Steam Stats</h1>
             Type in your SteamID to show stats
@@ -83,7 +82,7 @@
                     @if(Model.FriendCount > 0 && Model.Friendlist_Visible)
                     {
                         <h3 style="text-align:center;">User Friends on Steam</h3> <br>
-                        <p>This User has @Model.FriendCount friends on steam</p>
+                        <p style="padding:20px;">This User has @Model.FriendCount friends on steam</p>
 
                         <div id="OldestFriends">
                         <p>5 OLDEST FRIENDS</p>
@@ -132,7 +131,7 @@
                                 <div id="LastPlayedGame">
                                     <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
                                          style="border-radius:5px; width:40px; height:40px;" />
-                                    @(name) <br> Hours Played: @(hoursplayed), (ID: @(appid)) <br><br>
+                                    @(name) <br> Hours Played: @(hoursplayed) <span style="float:right; padding-right:20px;">(ID: @(appid))</span> <br><br>
                                 </div>
                             
                             }
@@ -150,7 +149,43 @@
 
                 </div>
                 <div id="OwnedGames">
+                    <h3 style="text-align:center;">Owned Games</h3> <br>
                     <p>This user has: @Model.GameCount Games</p>
+                    type in name of the game or its appid to check it out
+                    <input type="text" id="GameInput" placeholder="Name or AppID"/>
+                    <button type="button" onclick="test()">Check</button><br><br>
+                    <div id="GameInformation">
+                        <script>
+                            function test() {
+                                var input = document.getElementById("GameInput").value.toLowerCase();
+                                var found = false;
+                                @*Iterate through owned games to find the one matching the input*@
+                                var games = @Html.Raw(Model.OwnedGamesArray.ToString());
+                                console.log(games);
+                                for (var i = 0; i < games.length; i++) {
+                                    var game = games[i];
+                                    var appid = game["appid"].toString();
+                                    var name = game["name"].toString().toLowerCase();
+                                    var img_icon_url = game["img_icon_url"].toString();
+                                    var minutesplayed = game["playtime_forever"];
+                                    var hoursplayed = Math.floor(minutesplayed / 60);
+
+                                    if(name === input || appid === input)
+                                    {
+                                        found = true;
+                                        var gameInfoDiv = document.getElementById("GameInformation");
+                                        gameInfoDiv.innerHTML = game["name"] + "  " + game["appid"];
+                                    }
+                                    if(!found)
+                                    {
+                                        document.getElementById("GameInformation").innerHTML = "Game not found or error";
+                                    }
+                                    
+                                }
+                               
+                            }
+                        </script>
+                    </div>
                 </div>
                 </div>
             </div>
