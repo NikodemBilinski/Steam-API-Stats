@@ -43,9 +43,6 @@ body {
     min-height: 60vh;
     padding: 10px;
 }
-#LastPlayedGame{
-    
-}
 #OldestFriends {
     padding: 25px;
     font-size:25px;
@@ -65,4 +62,10 @@ body {
     flex:1;
     flex-direction:column;
     gap:20px;
+}
+#ChosenGameInfoHeader{
+    text-align:center;
+}
+#ChosenGameInfoMain{
+
 }

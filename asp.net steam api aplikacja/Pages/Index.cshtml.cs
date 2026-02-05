@@ -9,6 +9,7 @@ using static System.Net.WebRequestMethods;
 
 namespace asp.net_steam_api_aplikacja.Pages
 {
+
     public class IndexModel : PageModel
     {
         [BindProperty]
