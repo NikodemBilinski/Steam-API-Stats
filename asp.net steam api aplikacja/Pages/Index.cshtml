@@ -160,7 +160,14 @@
 
                             function test() 
                             {
-                                alert("dwdaw");
+                                var gameInfoDivHeader = document.getElementById("GameInformationHeader");
+
+                                gameInfoDivHeader.innerHTML = "";
+
+                                var gameInfoDivMain = document.getElementById("GameInformationMain");
+
+                                gameInfoDivMain.innerHTML = "";
+
                                 var input = document.getElementById("GameInput").value.toLowerCase();
                                 var found = false;
                                 @*Iterate through owned games to find the one matching the input*@
@@ -171,24 +178,41 @@
                                     var appid = game["appid"].toString();
                                     var name = game["name"].toString().toLowerCase();
                                     var img_icon_url = game["img_icon_url"].toString();
+                                    var lasttimeplayed = game["rtime_last_played"]
                                     var minutesplayed = game["playtime_forever"];
                                     var hoursplayed = Math.floor(minutesplayed / 60);
 
                                     if(name === input || appid === input)
                                     {
                                         found = true;
-                                        var gameInfoDivHeader = document.getElementById("GameInformationHeader");
+                                        
 
                                         // show game info header - icon of the game, name and steam id
                                         gameInfoDivHeader.innerHTML = "<div id='ChosenGameInfoHeader'><h3>" +
                                         '<img src="http://media.steampowered.com/steamcommunity/public/images/apps/' + appid + '/'+ img_icon_url +'.jpg">' +
                                         "  " + game["name"] + "  " + game["appid"] + "</h3></div>";
 
-                                        // show game info main - hours spent in game,
+                                        // show game info main - hours spent in game, last 2 weeks hours, last time played 
 
-                                        var gameInfoDivMain = document.getElementById("GameInformationMain");
+                                        
 
-                                        gameInfoDivMain.innerHTML = "test"
+                                        // played before but not in last 2 weeks
+                                        if(game["playtime_2weeks"] != null && minutesplayed > 0)
+                                        {
+                                            gameInfoDivMain.innerHTML = "gral 2 tygodnie temu"
+                                        }
+                                        // played before and in last 2 weeks
+                                        else if(game["playtime_2weeks"] == null && minutesplayed > 0)
+                                        {
+                                            gameInfoDivMain.innerHTML = "gral kiedys ale nie 2 tygodnie temu"
+                                        }
+                                        // didnt play before or error
+                                        else
+                                        {
+                                            gameInfoDivMain.innerHTML = "nie gral w ogole albo blad"
+                                        }
+
+                                        
                                         
                                         console.log(game);
                                     }
