@@ -22,7 +22,10 @@
             <input asp-for="SteamID" placeholder="SteamID64"/>
 		    <button type="submit">Pull Data</button>
         </form>
-        <div id="Json">
+
+        <!--Json Debugging code -->
+
+        @* <div id="Json">
             @if(Model.RawJsonSummaries != null)
             {
                 <h2>Raw JSON Data:</h2>
@@ -33,9 +36,9 @@
                 <h2>Raw JSON Data Friends:</h2>
                 <pre>@Model.RawJsonFriendList</pre>
             }
-        </div>
+        </div> *@
 
-        <!--Moze po prostu konkretne segmenty na konkretne requesty i tyle ladniej bedzie, np w postaci blokow-->
+        <!--Profile Info-->
 
         <div id="ProfileInfo">
             <div id="ProfileInfoHeader">
@@ -77,6 +80,8 @@
             </div>
 
 
+            <!-- Friends -->
+
             <div class="main-container">
                 <div id="ProfileInfoFriends">
                     @if(Model.FriendCount > 0 && Model.Friendlist_Visible)
@@ -110,6 +115,7 @@
                     }
                 </div>
             
+                <!--Recently played games-->
 
                 <div class="right-container">
                 <div id="ProfileInfoRecentlyPlayedGames">
@@ -126,7 +132,7 @@
                                 var name = game.GetProperty("name").ToString();
                                 var img_icon_url = game.GetProperty("img_icon_url").ToString();
                                 var minutesplayed = game.GetProperty("playtime_forever").GetInt32();
-                                var hoursplayed = (minutesplayed / 60);
+                                var hoursplayed = Math.Round(minutesplayed / 60.0, 1);
 
                                 <div id="LastPlayedGame">
                                     <img src="http://media.steampowered.com/steamcommunity/public/images/apps/@(appid)/@(img_icon_url).jpg"
@@ -148,14 +154,17 @@
                     }
 
                 </div>
+
+                <!--Owned played games-->
+
                 <div id="OwnedGames">
                     <h3 style="text-align:center;">Owned Games</h3> <br>
                     <p>This user has: @Model.GameCount Games</p>
                     type in name of the game or its appid to check it out
                     <input type="text" id="GameInput" placeholder="Name or AppID"/>
                     <button type="button" onclick="test()">Check</button><br><br>
-                    <div id="GameInformationHeader">a </div>
-                    <div id="GameInformationMain">a </div>
+                    <div id="GameInformationHeader"></div>
+                    <div id="GameInformationMain"></div>
                         <script>
 
                             function test() 
@@ -171,6 +180,7 @@
                                 var input = document.getElementById("GameInput").value.toLowerCase();
                                 var found = false;
                                 @*Iterate through owned games to find the one matching the input*@
+
                                 var games = @Html.Raw(Model.OwnedGamesArray);
                                 
                                 for (var i = 0; i < games.length; i++) {
@@ -180,7 +190,7 @@
                                     var img_icon_url = game["img_icon_url"].toString();
                                     var lasttimeplayed = game["rtime_last_played"]
                                     var minutesplayed = game["playtime_forever"];
-                                    var hoursplayed = Math.floor(minutesplayed / 60);
+                                    var hoursplayed = Math.round(minutesplayed / 60.0 , 1);
 
                                     if(name === input || appid === input)
                                     {
@@ -199,7 +209,10 @@
                                         // played before but not in last 2 weeks
                                         if(game["playtime_2weeks"] != null && minutesplayed > 0)
                                         {
-                                            gameInfoDivMain.innerHTML = "gral 2 tygodnie temu"
+                                            gameInfoDivMain.innerHTML = "Time Played: " + hoursplayed + " Hours" +
+                                            "<br><br>" + 
+                                            " "
+                                            ;
                                         }
                                         // played before and in last 2 weeks
                                         else if(game["playtime_2weeks"] == null && minutesplayed > 0)
