@@ -3,10 +3,3 @@
 
 // Write your JavaScript code.
 
-function cgdg() {
-    alert("test");
-
-    const games = window.steamData.myGames;
-
-    console.log(games);
-}

@@ -61,12 +61,12 @@ namespace asp.net_steam_api_aplikacja.Pages
             await GetLastPlayedGames(http);
             await GetOwnedGames(http);
 
-
+            Console.WriteLine("Finished pulling data.");
 
             //DEBUGGING 
 
             //Console.WriteLine(RawJsonFriendList);
-            //Console.WriteLine(RawJsonLastPlayed);
+            Console.WriteLine(RawJsonLastPlayed);
             //Console.WriteLine("last games: "+ LastGamesCount);
             //Console.WriteLine(FriendCount);
             //Console.WriteLine(UserName);
@@ -98,18 +98,18 @@ namespace asp.net_steam_api_aplikacja.Pages
 
                     UserStatus = User.GetProperty("personastate").ToString();
 
-                    Console.WriteLine("Successfully pulled PlayerSummaries data.");
+                    Console.WriteLine("Successfully pulled PlayerSummaries data. \n ");
 
                 }
                 else
                 {
                     Profile_Visible = false;
-                    Console.WriteLine("Steam user's profile is private.");
+                    Console.WriteLine("Steam user's profile is private. \n ");
                 }
             }
             catch
             {
-                Console.WriteLine("Error while pulling PlayerSummaries data.");
+                Console.WriteLine("Error while pulling PlayerSummaries data. \n ");
             }
         }
 
@@ -187,22 +187,19 @@ namespace asp.net_steam_api_aplikacja.Pages
                         .Select(x => x.Clone()).ToList();
 
 
-
-                    Console.WriteLine(FiveNewestFriendsInfo[1].GetProperty("avatar").ToString());
-
-                    Console.WriteLine("Successfully pulled Friends data.");
+                    Console.WriteLine("Successfully pulled Friends data. \n ");
                 }
                 else
                 {
                     Friendlist_Visible = false;
-                    Console.WriteLine("Friends data are private.");
+                    Console.WriteLine("Friends data are private. \n ");
                 }
             }
 
 
             catch
             {
-                Console.WriteLine("Error while pulling Friends data.");
+                Console.WriteLine("Error while pulling Friends data. \n ");
             }
 }
 
@@ -226,17 +223,17 @@ namespace asp.net_steam_api_aplikacja.Pages
                     LastGamesCount = RecentGamesArray.GetArrayLength();
 
                     RecentlyPlayed_Visible = true;
-                    Console.WriteLine("Successfully pulled RecentlyPlayedGames data.");
+                    Console.WriteLine("Successfully pulled RecentlyPlayedGames data. \n ");
                 }
                 else
                 {
                     RecentlyPlayed_Visible = false;
-                    Console.WriteLine("RecentGames data are private.");
+                    Console.WriteLine("RecentGames data are private. \n ");
                 }
             }
             catch
             {
-                Console.WriteLine("Error while pulling RecentlyPlayedGames data.");
+                Console.WriteLine("Error while pulling RecentlyPlayedGames data. \n ");
                 RecentlyPlayed_Visible = false;
             }
         }
@@ -260,14 +257,14 @@ namespace asp.net_steam_api_aplikacja.Pages
                     OwnedGamesArray = OwnedGames;
 
                     //Console.WriteLine("Game count: " + GameCount);
-                    //Console.WriteLine(OwnedGamesArray[54]);
+                    //Console.WriteLine(OwnedGamesArray);
 
-                    Console.WriteLine("Successfully pulled OwnedGames data.");
+                    Console.WriteLine("Successfully pulled OwnedGames data. \n ");
 
                 }
                 else
                 {
-                    Console.WriteLine("OwnedGames data are private.");
+                    Console.WriteLine("OwnedGames data are private. \n ");
                 }
 
                 //Console.WriteLine(JsonDoc4.RootElement.ToString());
@@ -275,7 +272,7 @@ namespace asp.net_steam_api_aplikacja.Pages
             }
             catch
             {
-                Console.WriteLine("Error while pulling OwnedGames data.");
+                Console.WriteLine("Error while pulling OwnedGames data. \n ");
             }
         }
 
