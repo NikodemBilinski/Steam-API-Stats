@@ -35,6 +35,8 @@ namespace asp.net_steam_api_aplikacja.Pages
         public string UserAvatar { get; set; }
         public string UserStatus { get; set; }
 
+        public DateTime datetime { get; set; }
+
         public int OldestFriendTime = int.MaxValue;
         public string OldestFriendID;
         public int FriendCount;
@@ -97,6 +99,14 @@ namespace asp.net_steam_api_aplikacja.Pages
                     UserAvatar = User.GetProperty("avatarfull").GetString();
 
                     UserStatus = User.GetProperty("personastate").ToString();
+
+                    int LastLogOff = User.GetProperty("lastlogoff").GetInt32();
+
+                    datetime = DateTimeOffset.FromUnixTimeSeconds(LastLogOff).LocalDateTime;
+
+                    Console.WriteLine(datetime);
+
+                    
 
                     Console.WriteLine("Successfully pulled PlayerSummaries data. \n ");
 

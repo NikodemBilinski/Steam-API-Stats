@@ -26,7 +26,7 @@
             <input asp-for="apiKey" placeholder="apiKey"/>
             <br><br>
             <input asp-for="SteamID" placeholder="SteamID64"/>
-		    <button type="submit">Pull Data</button>
+		    <button type="submit">Pull Data</button><br><br>
         </form>
 
         <!--Json Debugging code -->
@@ -67,7 +67,7 @@
                     }
                     else
                     {
-                        <h3 id="Username">Offline</h3>
+                        <h3 id="Username">Offline <br> Last Time Online: @Model.datetime</h3>
                         <style>
                             #UserAvatar {
                                 border: 3px solid rgba(141,141,142,1);
@@ -100,8 +100,9 @@
                         @for(int i = 0; i < Model.FiveOldestFriends.Count; i++)
                         {
                         
-                            <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveOldestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
-                                alt="fewa" style="border-radius:15px;"> &nbsp &nbsp @(Model.FiveOldestFriendsInfo[i].GetProperty("personaname").ToString())</p>
+                            <p><img src="@(Model.FiveOldestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
+                                alt="fewa" style="border-radius:15px;"> &nbsp &nbsp @(Model.FiveOldestFriendsInfo[i].GetProperty("personaname").ToString())
+                                &nbsp &nbsp (@(Model.FiveOldestFriendsInfo[i].GetProperty("steamid")))</p>
                         }
                         </div>
                         <div id="NewestFriends">
@@ -109,8 +110,9 @@
                         @for(int i = 0; i < Model.FiveNewestFriends.Count; i++)
                         {
                         
-                            <p>Friend nr. @(i + 1) &nbsp &nbsp <img src="@(Model.FiveNewestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
-                                alt="fewa"> &nbsp &nbsp @(Model.FiveNewestFriendsInfo[i].GetProperty("personaname").ToString())</p>
+                            <p><img src="@(Model.FiveNewestFriendsInfo[i].GetProperty("avatarmedium").ToString())" 
+                                alt="fewa"> &nbsp &nbsp @(Model.FiveNewestFriendsInfo[i].GetProperty("personaname").ToString())
+                                &nbsp &nbsp (@(Model.FiveOldestFriendsInfo[i].GetProperty("steamid")))</p>
                         }  
                         </div>
                     
@@ -164,13 +166,17 @@
                 <!--Owned played games-->
 
                 <div id="OwnedGames">
-                    <h3 style="text-align:center;">Owned Games</h3> <br>
-                    <p>This user has: @Model.GameCount Games</p>
-                    type in name of the game or its appid to check it out
-                    <input type="text" id="GameInput" placeholder="Name or AppID"/>
-                    <button type="button" onclick="test()">Check</button><br><br>
-                    <div id="GameInformationHeader"></div>
-                    <div id="GameInformationMain"></div>
+                        <h3 style="text-align:center;">Owned Games</h3>
+                        <div id="OwnedGamesIn">
+                        <p>This user has: @Model.GameCount Games</p>
+                        Type in name of the game or it's appid to check it out<br>
+                        <input type="text" id="GameInput" placeholder="Name or AppID"/>
+                        <button type="button" onclick="test()">Check</button><br><br>
+                    </div>
+                    <div id="GAME">
+                        <div id="GameInformationHeader"></div>
+                        <div id="GameInformationMain"></div>
+                    </div>
                     
                         <script src="~/js/Owned_Games_Search_Script.js"></script>
                 </div>

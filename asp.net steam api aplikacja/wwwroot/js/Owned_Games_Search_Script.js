@@ -27,16 +27,14 @@
         if (name === input || appid === input) {
             found = true;
 
-
+            document.getElementById("GAME").style = " font-size:25px; border: 2px solid black; border-radius: 15px;"
+            
             // show game info header - icon of the game, name and steam id
             gameInfoDivHeader.innerHTML = "<div id='ChosenGameInfoHeader'><h3>" +
                 '<img src="http://media.steampowered.com/steamcommunity/public/images/apps/' + appid + '/' + img_icon_url + '.jpg">' +
-                "  " + game["name"] + "  " + game["appid"] + "</h3></div>";
+                "  " + game["name"] + "  (" + game["appid"] + ")</h3></div>";
 
             // show game info main - hours spent in game, last 2 weeks hours, last time played 
-
-
-
             // played before but not in last 2 weeks
             if (game["playtime_2weeks"] != null && minutesplayed > 0)
             {
@@ -61,7 +59,7 @@
             // didnt play before or error
             else
             {
-                gameInfoDivMain.innerHTML = "This user never played this game before"
+                gameInfoDivMain.innerHTML = "This user never played this game before";
             }
 
 

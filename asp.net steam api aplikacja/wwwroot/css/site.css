@@ -63,9 +63,18 @@ body {
     flex-direction:column;
     gap:20px;
 }
+#GAME{
+    font-size:25px;
+    
+}
 #ChosenGameInfoHeader{
     text-align:center;
+    padding:25px;
 }
-#ChosenGameInfoMain{
-
+#GameInformationMain {
+    padding: 25px;
+    text-align:center;
+}
+#OwnedGamesIn{
+    padding:25px;
 }
